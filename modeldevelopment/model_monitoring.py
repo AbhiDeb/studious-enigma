@@ -88,7 +88,7 @@ if __name__ == '__main__':
     X_test = None
 
     try:
-        model_path = find_registered_model(name = "Bias Mitigation Telecom Churn", uri = f"sqlite:///{relative_model_dev_path}/Malware_Detection_MLFlow.db")
+        model_path = find_registered_model(name = "Bias Mitigation Malware Detection", uri = f"sqlite:///{relative_model_dev_path}/Malware_Detection_MLFlow.db")
         print(f'{relative_model_dev_path}/{model_path[2:]}/model.pkl')
         with open(f'{relative_model_dev_path}/{model_path[2:]}/model.pkl', "rb") as f:
             loaded_model = pickle.load(f)
