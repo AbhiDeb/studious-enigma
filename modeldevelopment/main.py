@@ -8,7 +8,7 @@ import os
 import pickle
 import pandas as pd
 
-relative_model_dev_path = '.s'
+relative_model_dev_path = '.'
 
 model_name = "Bias Mitigation Malware Detection"
 mlflow.set_tracking_uri(f"sqlite:///{relative_model_dev_path}/Malware_Detection_MLFlow.db")
@@ -46,7 +46,6 @@ def read_root():
 
 
 @app.get("/predictions")
-
 def predict(wdft_RegionIdentifier: float, Census_IsTouchEnabled: float,	Census_IsSecureBootEnabled: float,	IsSxsPassiveMode: float, Census_MDC2FormFactor: float,	Census_OSWUAutoUpdateOptionsName: float, OsSuite: float, Census_IsPortableOperatingSystem: float, Census_ActivationChannel: float, Census_OSArchitecture: float, AutoSampleOptIn: float, Census_GenuineStateName: float, Census_IsPenCapable: float, Processor: float,	ProductName: float,	Census_PrimaryDiskTypeName: float, Platform: float, HasTpm: float, Census_HasOpticalDiskDrive: float, SkuEdition: float, IsBeta: float,	OsPlatformSubRelease: float, Census_FlightRing: float, Census_OSInstallTypeName: float, Census_DeviceFamily: float, SmartScreen: float):
     
     data = None
@@ -61,14 +60,25 @@ def predict(wdft_RegionIdentifier: float, Census_IsTouchEnabled: float,	Census_I
     with open(f'{relative_model_dev_path}/{data[2:]}/model.pkl', "rb") as f:
         loaded_model = pickle.load(f)
     
-    row_list = [wdft_RegionIdentifier , Census_IsTouchEnabled ,	Census_IsSecureBootEnabled,	IsSxsPassiveMode, Census_MDC2FormFactor, Census_OSWUAutoUpdateOptionsName, OsSuite, Census_IsPortableOperatingSystem, Census_ActivationChannel, Census_OSArchitecture, AutoSampleOptIn, Census_GenuineStateName, Census_IsPenCapable, Processor, ProductName, Census_PrimaryDiskTypeName, Platform, HasTpm, Census_HasOpticalDiskDrive, SkuEdition, IsBeta,	OsPlatformSubRelease, Census_FlightRing, Census_OSInstallTypeName, Census_DeviceFamily, SmartScreen ,999]
-    col_list = ['wdft_RegionIdentifier' , 'Census_IsTouchEnabled' ,	'Census_IsSecureBootEnabled',	'IsSxsPassiveMode', 'Census_MDC2FormFactor', 'Census_OSWUAutoUpdateOptionsName', 'OsSuite', 'Census_IsPortableOperatingSystem', 'Census_ActivationChannel', 'Census_OSArchitecture', 'AutoSampleOptIn', 'Census_GenuineStateName', 'Census_IsPenCapable', 'Processor', 'ProductName', 'Census_PrimaryDiskTypeName', 'Platform', 'HasTpm', 'Census_HasOpticalDiskDrive', 'SkuEdition', 'IsBeta',	'OsPlatformSubRelease', 'Census_FlightRing', 'Census_OSInstallTypeName', 'Census_DeviceFamily', 'SmartScreen','HasDetections']
-    row_df   = pd.DataFrame([row_list],columns = col_list)
-   
-    row_aif360 = md.decode_dataset(data_frame=row_df)
-    
-    prediction = loaded_model.predict(row_aif360.convert_to_dataframe()[0].drop('HasDetections',axis=1))[0]
-    
+    row_list = ['12dwecwe2232', wdft_RegionIdentifier , Census_IsTouchEnabled ,	Census_IsSecureBootEnabled,	IsSxsPassiveMode, Census_MDC2FormFactor, Census_OSWUAutoUpdateOptionsName, OsSuite, Census_IsPortableOperatingSystem, Census_ActivationChannel, Census_OSArchitecture, AutoSampleOptIn, Census_GenuineStateName, Census_IsPenCapable, Processor, ProductName, Census_PrimaryDiskTypeName, Platform, HasTpm, Census_HasOpticalDiskDrive, SkuEdition, IsBeta,	OsPlatformSubRelease, Census_FlightRing, Census_OSInstallTypeName, Census_DeviceFamily, SmartScreen ,999]
+    col_list = ['MachineIdentifier', 'wdft_RegionIdentifier' , 'Census_IsTouchEnabled' ,	'Census_IsSecureBootEnabled',	'IsSxsPassiveMode', 'Census_MDC2FormFactor', 'Census_OSWUAutoUpdateOptionsName', 'OsSuite', 'Census_IsPortableOperatingSystem', 'Census_ActivationChannel', 'Census_OSArchitecture', 'AutoSampleOptIn', 'Census_GenuineStateName', 'Census_IsPenCapable', 'Processor', 'ProductName', 'Census_PrimaryDiskTypeName', 'Platform', 'HasTpm', 'Census_HasOpticalDiskDrive', 'SkuEdition', 'IsBeta',	'OsPlatformSubRelease', 'Census_FlightRing', 'Census_OSInstallTypeName', 'Census_DeviceFamily', 'SmartScreen','HasDetections']
+    row_df = None
+    try:
+        row_df   = pd.DataFrame([row_list],columns = col_list)
+    except Exception as e:
+        print(traceback.format_exc())
+    # print(1)
+    row_aif360 = None
+    try:
+        row_aif360 = md.decode_dataset(data_frame=row_df)
+    except Exception as e:
+        print(traceback.format_exc())
+    # print(2)
+    try:
+        prediction = loaded_model.predict(row_aif360.convert_to_dataframe()[0].drop('HasDetections',axis=1))[0]
+    except Exception as e:
+        print(traceback.format_exc())
+    # print(prediction)
     return {"artifact_path": f'{data[2:]}/model.pkl', "predicted_class":int(prediction)}
 
 
@@ -82,3 +92,8 @@ def log_production_model():
                 logged_model = versions.source
                 break
     return logged_model
+
+if __name__ == '__main__':
+    print("Hello")  
+    res = predict(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+    print("The response is ",res)
