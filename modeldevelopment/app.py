@@ -33,7 +33,8 @@ if __name__ == '__main__':
         data_aif360 = md.decode_dataset(data_frame=load_dataframe())
         train_data, valid_data, test_data = md.train_valid_test_split(data_frame=data_aif360)
 
-        print(train_data.convert_to_dataframe()[0].shape)
+        # print(train_data.convert_to_dataframe()[0].shape)
+        
         exp_id = get_experiment_id()
         logging.info(f"All Experiments are stored under  {artifact_loc}  directory")
         logging.info(f"Model Experimentation for `{experiment_name}` is started...")
